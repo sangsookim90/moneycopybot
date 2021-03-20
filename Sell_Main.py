@@ -8,7 +8,7 @@ import pyupbit
 import telegram
 import time
 import pandas as pd
-from custom_lib.volatility_check import VolatilityChecker
+from logic_lib.volatility_check import VolatilityChecker
 import traceback
 import matplotlib.gridspec as gridspec
 import os
