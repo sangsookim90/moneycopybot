@@ -9,4 +9,4 @@
 실행 : python3 buy_main.py
 <br/>
 <사용법> <br/>
-![telegram_usage](https://user-images.githubusercontent.com/80157109/111898426-5956ec00-8a69-11eb-8e05-e1f63ccc5ff2.jpeg)
+<img src = "https://user-images.githubusercontent.com/80157109/111898426-5956ec00-8a69-11eb-8e05-e1f63ccc5ff2.jpeg" , width = '300' , height = '500'>
