@@ -6,7 +6,7 @@
 >  >     
 >  * 사용법   
 >    * 구동하기   
->      * python3 buy_main.py
+>      * python3 bot_main.py
 >             
 >  * 텔레그램을 활용한 bot control 예제    
 >  <img src = "https://user-images.githubusercontent.com/80157109/111898746-3fb6a400-8a6b-11eb-9170-c648fc669223.jpeg"  height = '50%'  width = '50%'></img>
