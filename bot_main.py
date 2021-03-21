@@ -47,7 +47,9 @@ class TelegramControlBot():
     
     def change_config_attr(self, attr_nm1, attr_nm2, value):
         self.config.read('./config.ini')
-        self.config.set(attr_nm1, attr_nm2, value)        
+        self.config.set(attr_nm1, attr_nm2, value)  
+        with open('config.ini', 'w') as configfile:
+            self.config.write(configfile)
         
     
     def buy_on(self, update, context):
