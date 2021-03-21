@@ -75,8 +75,8 @@ class TelegramControlBot():
         
         self.config.read('./config.ini')
         main_on = 'on' if 'pid.txt' in os.listdir() else 'off' 
-        buy_on = 'on' if self.config['MODE']['BUY'] else 'off'
-        sell_on = 'on' if self.config['MODE']['SELL'] else 'off'
+        buy_on = 'on' if self.config['MODE']['BUY'] == '1' else 'off'
+        sell_on = 'on' if self.config['MODE']['SELL'] == '1' else 'off'
         message = 'main_process : {0}, buy : {1}, sell : {2}'.format(main_on, buy_on, sell_on)
         context.bot.send_message(chat_id=update.effective_chat.id, text= message)
 
