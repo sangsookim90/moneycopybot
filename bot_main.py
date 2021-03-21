@@ -31,7 +31,11 @@ class TelegramControlBot():
         self.add_handler('stop', self.bot_stop)
         self.add_handler('except', self.except_coin)
         self.add_handler('checkexcept', self.check_except_coin)
-
+        self.add_handler('buyon', self.buy_on)
+        self.add_handler('sellon', self.sell_on)
+        self.add_handler('buyoff', self.buy_off)
+        self.add_handler('selloff', self.sell_off)
+        
 
     def execute(self): 
         self.updater.start_polling()
@@ -40,8 +44,30 @@ class TelegramControlBot():
     def add_handler(self, command, function):
         com_handler = CommandHandler(command, function)
         self.dispatcher.add_handler(com_handler)
+    
+    def change_config_attr(self, attr_nm1, attr_nm2, value):
+        self.config.read('./config.ini')
+        self.config.set(attr_nm1, attr_nm2, value)        
         
-          
+    
+    def buy_on(self, update, context):
+        self.change_config_attr('MODE', 'BUY', '1')
+        context.bot.send_message(chat_id=update.effective_chat.id, text="buy_process를 작동합니다.")
+    
+    def buy_off(self, update, context):
+        self.change_config_attr('MODE', 'BUY', '0')
+        context.bot.send_message(chat_id=update.effective_chat.id, text="buy_process를 중지합니다.")
+    
+    def sell_on(self, update, context):
+        self.change_config_attr('MODE', 'SELL', '1')
+        context.bot.send_message(chat_id=update.effective_chat.id, text="sell_process를 작동합니다.")
+    
+    def sell_off(self, update, context):
+        self.change_config_attr('MODE', 'SELL', '0')
+        context.bot.send_message(chat_id=update.effective_chat.id, text="sell_process를 중지합니다.")
+        
+        
+        
         
     def health_checker(self, update, context): 
         context.bot.send_message(chat_id=update.effective_chat.id, text="정상 동작중")
@@ -104,16 +130,12 @@ class TelegramControlBot():
             if target_coin in except_coins : 
                 except_coins.remove(target_coin)
                 message = "{} 거래를 재개합니다.".format(target_coin)
-                self.config.set('TICKERS', 'NAMES', ','.join(except_coins) )
 
             else : 
                 except_coins.append(target_coin)
                 message = "{} 거래를 중지합니다.".format(target_coin)
-                self.config.set('TICKERS', 'NAMES', ','.join(except_coins) )
-
-
-            with open('config.ini', 'w') as configfile:
-                self.config.write(configfile)
+                
+            self.change_config_attr('TICKERS', 'NAMES', ','.join(except_coins) )
 
         else:
             message = "코인 코드명이 잘못되었습니다."

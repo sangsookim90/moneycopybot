@@ -35,41 +35,53 @@ class MoneyCopyBot():
         self.tick = 3
         self.base = 0 
    
+
+    def get_real_time_config(self, attr1, attr2): 
+        self.config.read('./config.ini')
+        return self.config[attr1][attr2]
+        
         
     def execute(self): 
-        while True: 
+        while True:             
             for _ in range(4) : 
-                tickers = self.get_tickers()
-                now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                print('{0} : sell_process '.format(now))
-                for coin_code in tickers:
-                    try : 
-                        self.sell_execute(coin_code) 
+                sell_mode = self.get_real_time_config('MODE', 'SELL')
+                if sell_mode == 1 :
+                    tickers = self.get_tickers()
+                    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    print('{0} : sell_process '.format(now))
+                    for coin_code in tickers:
+                        try : 
+                            self.sell_execute(coin_code) 
 
-                    except Exception as e : 
-                        print(traceback.print_exc())
-                        print(coin_code)
-                        continue 
+                        except Exception as e : 
+                            print(traceback.print_exc())
+                            print(coin_code)
+                            continue 
                 time.sleep(55)
                 
-            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')                              
-            tickers = self.get_tickers()
-            print('{0} : buy_process '.format(now))
-            for coin_code in tickers : 
-                try : 
-                     self.buy_execute(coin_code)
+                
+            buy_mode = self.get_real_time_config('MODE', 'BUY')
+            if buy_mode == 1 : 
+                now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')                              
+                tickers = self.get_tickers()
+                print('{0} : buy_process '.format(now))
+                for coin_code in tickers : 
+                    try : 
+                         self.buy_execute(coin_code)
 
-                except Exception as e : 
-                    print(traceback.print_exec())
-                    print(coin_code)
-                    continue
+                    except Exception as e : 
+                        print(traceback.print_exec())
+                        print(coin_code)
+                        continue
 
     def get_tickers(self):
         tickers = pyupbit.get_tickers('KRW')
-        self.config.read('./config.ini')
-        except_coins = ['KRW-{0}'.format(x) for x in self.config['TICKERS']['NAMES'].split(',') if len(x) > 0 ]
+        except_coins_config = self.real_time_config('TICKERS', 'NAMES')
+        except_coins = ['KRW-{0}'.format(x) for x in except_coins_config.split(',') if len(x) > 0 ]
         tickers = [x for x in tickers if x not in except_coins]
         return tickers       
+    
+    
     
     def buy_execute(self, coin_code):
         time.sleep(0.1)
