@@ -13,44 +13,63 @@ import traceback
 import matplotlib.gridspec as gridspec
 import os
 from mpl_finance import candlestick_ohlc
+import datetime
+
 
 class MoneyCopyBot():
     
     def __init__(self) : 
-        config = configparser.ConfigParser()
-        config.read('./config.ini')
-        access_key = config['UPBIT']['ACCESSKEY']
-        secret_key = config['UPBIT']['SECRETKEY']
-        telgm_token = config['TELEGRAM']['TOKEN']
-        self.chat_id = config['TELEGRAM']['CHAT_ID']
+        self.config = configparser.ConfigParser()
+        self.config.read('./config.ini')
+        access_key = self.config['UPBIT']['ACCESSKEY']
+        secret_key = self.config['UPBIT']['SECRETKEY']
+        telgm_token = self.config['TELEGRAM']['TOKEN']
+        self.chat_id = self.config['TELEGRAM']['CHAT_ID']
         self.bot = telegram.Bot(token = telgm_token)
-#         self.tickers = config['TICKERS']['NAMES'].split(',')
-#         self.tickers = ['KRW-' + x for x in self.tickers]
         
-        self.tickers = pyupbit.get_tickers('KRW')
-#         self.tickers = ['KRW-BTC', 'KRW-ETH']
         
-        self.tickers = [x for x in self.tickers if 'ADA' not in x ]
         self.max_buy_price = 20000.0
         self.max_sell_price = 20000.0
         self.upbit = pyupbit.Upbit(access_key, secret_key)
         self.vc = VolatilityChecker()
         self.tick = 3
         self.base = 0 
-       
+   
         
     def execute(self): 
         while True: 
-            for coin_code in self.tickers:
+            for _ in range(4) : 
+                tickers = self.get_tickers()
+                now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                print('{0} : sell_process '.format(now))
+                for coin_code in tickers:
+                    try : 
+                        self.sell_execute(coin_code) 
+
+                    except Exception as e : 
+                        print(traceback.print_exc())
+                        print(coin_code)
+                        continue 
+                time.sleep(55)
+                
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')                              
+            tickers = self.get_tickers()
+            print('{0} : buy_process '.format(now))
+            for coin_code in tickers : 
                 try : 
-                    #print(coin_code)
-                    self.buy_execute(coin_code)
-                    #self.sell_execute(coin_code)
+                     self.buy_execute(coin_code)
+
                 except Exception as e : 
-                    print(traceback.print_exc())
+                    print(traceback.print_exec())
                     print(coin_code)
-                    continue 
-            time.sleep(240)
+                    continue
+
+    def get_tickers(self):
+        tickers = pyupbit.get_tickers('KRW')
+        self.config.read('./config.ini')
+        except_coins = ['KRW-{0}'.format(x) for x in self.config['TICKERS']['NAMES'].split(',') if len(x) > 0 ]
+        tickers = [x for x in tickers if x not in except_coins]
+        return tickers       
     
     def buy_execute(self, coin_code):
         time.sleep(0.1)
@@ -212,6 +231,11 @@ class MoneyCopyBot():
 if __name__ == "__main__" :
     moneycopybot = MoneyCopyBot()
     moneycopybot.execute()
+
+
+
+
+
 
 
 
