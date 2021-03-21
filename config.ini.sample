@@ -2,6 +2,12 @@
 ACCESSKEY =
 SECRETKEY =
 
+
+[MODE]
+BUY = 1
+SELL = 1
+
+
 [TELEGRAM]
 TOKEN = 
 CHAT_ID = 
