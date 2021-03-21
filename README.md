@@ -6,12 +6,12 @@
 >      
 >   <br/>
 > * 사용법
->    * 구동하기 : python3 bot_main.py    
->    * Process 구조 :           
->       * telegram control bot : 텔레그램 메시지 리스너 및 텔레그램 메시지로 코인 트레이딩 프로세스 컨트롤     
->          * main_bot : sell process와 buy process 상위 process로 main_bot off 시에는 buy bot과 sell bot이 동작하지않음        
->             * sell bot : 갖고 있는 코인을 판매하는 프로세스   
->             * buy bot  : 코인을 구매하는 프로세스  
+>    * 구동하기 : python3 bot_main.py
+>    * Process 구조 :
+>       * telegram control bot : 텔레그램 메시지 리스너 및 텔레그램 메시지로 코인 트레이딩 프로세스 컨트롤
+>          * main_bot : sell process와 buy process 상위 process로 main_bot off 시에는 buy bot과 sell bot이 동작하지않음
+>             * sell bot : 갖고 있는 코인을 판매하는 프로세스
+>             * buy bot  : 코인을 구매하는 프로세스
 >   
 >    * 명령어    
 >       command | 기능    
