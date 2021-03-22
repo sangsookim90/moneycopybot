@@ -43,6 +43,23 @@ class MoneyCopyBot():
         
     def execute(self): 
         while True:             
+            
+            buy_mode = self.get_real_time_config('MODE', 'BUY')
+            if buy_mode == '1' : 
+                now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')                              
+                tickers = self.get_tickers()
+                print('{0} : buy_process '.format(now))
+                for coin_code in tickers : 
+                    try : 
+                        print(coin_code)
+                        self.buy_execute(coin_code)
+
+                    except Exception as e : 
+                        print(traceback.print_exc())
+                        print(coin_code)
+                        continue
+
+
             for _ in range(4) : 
                 sell_mode = self.get_real_time_config('MODE', 'SELL')
                 if sell_mode == '1' :
@@ -60,19 +77,6 @@ class MoneyCopyBot():
                 time.sleep(55)
                 
                 
-            buy_mode = self.get_real_time_config('MODE', 'BUY')
-            if buy_mode == '1' : 
-                now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')                              
-                tickers = self.get_tickers()
-                print('{0} : buy_process '.format(now))
-                for coin_code in tickers : 
-                    try : 
-                         self.buy_execute(coin_code)
-
-                    except Exception as e : 
-                        print(traceback.print_exec())
-                        print(coin_code)
-                        continue
 
     def get_tickers(self):
         tickers = pyupbit.get_tickers('KRW')
