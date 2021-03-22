@@ -88,7 +88,7 @@ class MoneyCopyBot():
     
     
     def buy_execute(self, coin_code):
-        time.sleep(0.1)
+        time.sleep(0.2)
         data_days = pyupbit.get_ohlcv(coin_code, interval = 'day', count = 30)
         if self.vc.check_bollinger(data_days):
             data_minute = pyupbit.get_ohlcv(coin_code, interval="minute5", count= 30)  
@@ -120,7 +120,7 @@ class MoneyCopyBot():
     def sell_execute(self, coin_code):
         ## 대충 파는 부분 -- 조회해서 있으면 판다. 
         balance = self.upbit.get_balance(ticker=coin_code)
-        time.sleep(0.1)
+        time.sleep(0.2)
         if balance > 0 : 
             data_minute = pyupbit.get_ohlcv(coin_code, interval="minute1", count= 30)  
             data_hours = pyupbit.get_ohlcv(coin_code, interval = 'minute60', count = 30)
