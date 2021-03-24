@@ -3,7 +3,7 @@
 ### □ 텔레그램과 연계한 코인 봇입니다.
 >  * 자유롭게 사용하셔도 좋습니다.
 >  * 좋은 트레이딩 로직이 있으면 같이 공유해요!
->  * 코인은 단타보다는 장투하는게 좋습니다.
+>  * 코인은 단타보다는 장투하는게 좋습니다.(급락장에서만 비상탈출 하세요 ㅎㅎ)
 >  * Process 구조 :
 >     * telegram control bot : 텔레그램 메시지 리스너 및 텔레그램 메시지로 코인 트레이딩 프로세스 컨트롤
 >        * main_bot : sell process와 buy process 상위 process로 main_bot off 시에는 buy bot과 sell bot이 동작하지않음
