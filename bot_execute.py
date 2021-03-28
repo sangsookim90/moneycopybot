@@ -131,7 +131,7 @@ class MoneyCopyBot():
             benefit_ratio = (current_price - avg_buy_price)/avg_buy_price
 
             
-            if self.vc.check_sell_rsi(data_minute,rsi_jump=13) and  benefit_ratio >= 1.01:
+            if self.vc.check_sell_rsi(data_minute,rsi_jump=13) and  benefit_ratio >= 0.03:
                 ret = self.upbit.sell_market_order(coin_code, balance)
                 if 'error' not in ret.keys() :
                     params = {}
