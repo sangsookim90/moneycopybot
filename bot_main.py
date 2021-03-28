@@ -21,7 +21,7 @@ class TelegramControlBot():
         secret_key = self.config['UPBIT']['SECRETKEY']
 
         self.upbit = pyupbit.Upbit(access_key, secret_key)
-        self.updater = Updater( token= telgm_token, use_context=True )
+        self.updater = Updater(token= telgm_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         
         
@@ -44,6 +44,7 @@ class TelegramControlBot():
     def add_handler(self, command, function):
         com_handler = CommandHandler(command, function)
         self.dispatcher.add_handler(com_handler)
+
     
     def change_config_attr(self, attr_nm1, attr_nm2, value):
         self.config.read('./config.ini')
@@ -55,24 +56,24 @@ class TelegramControlBot():
     def buy_on(self, update, context):
         self.change_config_attr('MODE', 'BUY', '1')
         context.bot.send_message(chat_id=update.effective_chat.id, text="buy_process를 작동합니다.")
+
     
     def buy_off(self, update, context):
         self.change_config_attr('MODE', 'BUY', '0')
         context.bot.send_message(chat_id=update.effective_chat.id, text="buy_process를 중지합니다.")
+
     
     def sell_on(self, update, context):
         self.change_config_attr('MODE', 'SELL', '1')
         context.bot.send_message(chat_id=update.effective_chat.id, text="sell_process를 작동합니다.")
+
     
     def sell_off(self, update, context):
         self.change_config_attr('MODE', 'SELL', '0')
         context.bot.send_message(chat_id=update.effective_chat.id, text="sell_process를 중지합니다.")
         
         
-        
-        
     def health_checker(self, update, context): 
-        
         self.config.read('./config.ini')
         main_on = 'on' if 'pid.txt' in os.listdir() else 'off' 
         buy_on = 'on' if self.config['MODE']['BUY'] == '1' else 'off'
@@ -103,8 +104,7 @@ class TelegramControlBot():
         if 'pid.txt' in os.listdir():
             message = "봇이 이미 실행중입니다."    
         else:
-            cmd = [ "python3", "bot_execute.py"]
-            #cmd = ["python3",  "Buy_Main.py"]
+            cmd = ["python", "bot_execute.py"] # 경우에 따라 python3로 변경 필요
             process = subprocess.Popen(cmd, shell=False)
             with open('pid.txt', 'w') as f:
                 f.write(str(process.pid))
@@ -119,7 +119,8 @@ class TelegramControlBot():
         else:
             with open('pid.txt', 'r') as f:
                 pid = f.read()
-            os.system('kill -9 ' + pid)
+            # os.system('kill -9 ' + pid) # linux ver.
+            os.system('taskkill /f /pid ' + pid) # windows ver.
             os.remove('pid.txt')
             message = "봇을 종료합니다."
 
@@ -128,9 +129,8 @@ class TelegramControlBot():
 
 
     def except_coin(self, update, context):
-
         self.config.read('./config.ini')
-        except_coins = [ x for x in self.config['TICKERS']['NAMES'].split(',')   if len(x) > 0 ]
+        except_coins = [x for x in self.config['TICKERS']['NAMES'].split(',') if len(x) > 0]
         target_coin = context.args[0].upper()
 
         if 'KRW-'+target_coin in pyupbit.get_tickers('KRW'): 
@@ -143,7 +143,7 @@ class TelegramControlBot():
                 except_coins.append(target_coin)
                 message = "{} 거래를 중지합니다.".format(target_coin)
                 
-            self.change_config_attr('TICKERS', 'NAMES', ','.join(except_coins) )
+            self.change_config_attr('TICKERS', 'NAMES', ','.join(except_coins))
 
         else:
             message = "코인 코드명이 잘못되었습니다."
@@ -153,7 +153,7 @@ class TelegramControlBot():
 
     def check_except_coin(self, update, context):
         self.config.read('./config.ini')
-        except_coin_list = [ x for x in self.config['TICKERS']['NAMES'].split(',')   if len(x) > 0 ]
+        except_coin_list = [ x for x in self.config['TICKERS']['NAMES'].split(',') if len(x) > 0]
         if len(except_coin_list) != 0:
             except_coin_list = [coin for coin in except_coin_list]
             message = "{} 거래 중지 코인 목록입니다.".format(except_coin_list)
