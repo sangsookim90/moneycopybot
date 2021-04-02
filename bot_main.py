@@ -104,7 +104,7 @@ class TelegramControlBot():
         if 'pid.txt' in os.listdir():
             message = "봇이 이미 실행중입니다."    
         else:
-            cmd = ["python", "bot_execute.py"] # 경우에 따라 python3로 변경 필요
+            cmd = ["python3", "bot_execute.py"] # 경우에 따라 python3로 변경 필요
             process = subprocess.Popen(cmd, shell=False)
             with open('pid.txt', 'w') as f:
                 f.write(str(process.pid))
@@ -119,8 +119,8 @@ class TelegramControlBot():
         else:
             with open('pid.txt', 'r') as f:
                 pid = f.read()
-            # os.system('kill -9 ' + pid) # linux ver.
-            os.system('taskkill /f /pid ' + pid) # windows ver.
+            os.system('kill -9 ' + pid) # linux ver.
+            # os.system('taskkill /f /pid ' + pid) # windows ver.
             os.remove('pid.txt')
             message = "봇을 종료합니다."
 

@@ -28,7 +28,7 @@ class MoneyCopyBot():
         self.bot = telegram.Bot(token = telgm_token)
         
         self.tickers = pyupbit.get_tickers('KRW')
-        self.max_buy_price = 50000.0
+        self.max_buy_price = 100000.0
         # self.max_sell_price = 50000.0
         self.upbit = pyupbit.Upbit(access_key, secret_key)
         self.vc = VolatilityChecker()
@@ -57,7 +57,6 @@ class MoneyCopyBot():
                         print(traceback.print_exc())
                         print(coin_code)
                         continue
-                                     
 
             for _ in range(3) : 
                 sell_mode = self.get_real_time_config('MODE', 'SELL')
@@ -73,7 +72,7 @@ class MoneyCopyBot():
                             print(traceback.print_exc())
                             print(coin_code)
                             continue 
-                time.sleep(60)
+                time.sleep(5)
 
 
     def get_tickers(self):
@@ -144,7 +143,7 @@ class MoneyCopyBot():
                     self.bot.send_photo(chat_id=self.chat_id, photo = open(os.path.join(os.getcwd(), 'tmp_img', 'tmp.png'), 'rb'))
                     self.send_message(avg_buy_price, current_price, coin_code, balance, profit, 'sell', reason)
             
-            elif benefit_ratio > 0.07 and rsi_3m[-1] < 0.6:
+            elif benefit_ratio > 0.07 and rsi_1m[-1] < 0.6:
                 ret = self.upbit.sell_market_order(coin_code, balance)
                 if 'error' not in ret.keys() :
                     reason = 'standard margin'
