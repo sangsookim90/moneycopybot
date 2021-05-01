@@ -60,7 +60,7 @@ class MoneyCopyBot():
                         continue
 
 
-            for _ in range(4) : 
+            for _ in range(3) : 
                 sell_mode = self.get_real_time_config('MODE', 'SELL')
                 if sell_mode == '1' :
                     tickers = self.get_tickers()
@@ -74,7 +74,7 @@ class MoneyCopyBot():
                             print(traceback.print_exc())
                             print(coin_code)
                             continue 
-                time.sleep(55)
+                time.sleep(290)
                 
                 
 
@@ -91,13 +91,15 @@ class MoneyCopyBot():
         time.sleep(0.2)
         data_days = pyupbit.get_ohlcv(coin_code, interval = 'day', count = 30)
         if self.vc.check_bollinger(data_days):
-            data_minute = pyupbit.get_ohlcv(coin_code, interval="minute5", count= 30)  
-            data_hours = pyupbit.get_ohlcv(coin_code, interval = 'minute60', count = 30)
+            data_minute = pyupbit.get_ohlcv(coin_code, interval="minute15", count= 50)  
+            data_hours = pyupbit.get_ohlcv(coin_code, interval = 'minute60', count = 50)
             data_hours = self.vc.get_target_df_hours(data_hours, self.tick, self.base)
             
             
             if self.vc.check_buy_rsi(data_minute,rsi_jump=13): 
-                ret = self.upbit.buy_market_order(coin_code, self.max_buy_price)
+#                 ret = self.upbit.buy_market_order(coin_code, self.max_buy_price)
+                current_price = pyupbit.get_current_price(coin_code)
+                ret = self.upbit.buy_limit_order(coin_code, current_price, self.max_buy_price)
                 if 'error' not in ret.keys() :
                     price = pyupbit.get_current_price(coin_code)
                     volume = self.max_buy_price/price
@@ -122,8 +124,8 @@ class MoneyCopyBot():
         balance = self.upbit.get_balance(ticker=coin_code)
         time.sleep(0.2)
         if balance > 0 : 
-            data_minute = pyupbit.get_ohlcv(coin_code, interval="minute1", count= 30)  
-            data_hours = pyupbit.get_ohlcv(coin_code, interval = 'minute60', count = 30)
+            data_minute = pyupbit.get_ohlcv(coin_code, interval="minute15", count= 50)  
+            data_hours = pyupbit.get_ohlcv(coin_code, interval = 'minute60', count = 50)
             data_hours = self.vc.get_target_df_hours(data_hours, self.tick, self.base)
             current_price = pyupbit.get_current_price(coin_code)
             avg_buy_price = self.upbit.get_avg_buy_price(coin_code)
@@ -131,8 +133,9 @@ class MoneyCopyBot():
             benefit_ratio = (current_price - avg_buy_price)/avg_buy_price
 
             
-            if self.vc.check_sell_rsi(data_minute,rsi_jump=13) and  benefit_ratio >= 0.03:
-                ret = self.upbit.sell_market_order(coin_code, balance)
+            if self.vc.check_sell_rsi(data_minute,rsi_jump=13):
+#                 ret = self.upbit.sell_market_order(coin_code, balance)
+                ret = self.upbit.sell_limit_order(coin_code, current_price, balance)
                 if 'error' not in ret.keys() :
                     params = {}
                     params['COIN_CD'] = coin_code

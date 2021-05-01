@@ -33,7 +33,7 @@ class VolatilityChecker():
         
         
     def check_buy_rsi(self, df_minute, rsi_jump = 13):
-        lower_limit = .21
+        lower_limit = .3
         upper_limit = .70
 
         df_minute['diff'] = None
@@ -43,12 +43,12 @@ class VolatilityChecker():
         for i in range(1+rsi_jump, df_minute.shape[0]) :
             diff = df_minute['diff'].iloc[i-rsi_jump:i]
             df_minute['RSI'].iloc[i] = np.sum(np.where(diff > 0, diff, 0) ) / np.sum(np.abs(diff))
-        return (df_minute['RSI'].iloc[-1] >= lower_limit) and (df_minute['RSI'].iloc[-2] <= lower_limit)
+        return (df_minute['RSI'].iloc[-1] < lower_limit) and (df_minute['RSI'].iloc[-2] > lower_limit)
     
     
     def check_sell_rsi(self, df_minute, rsi_jump = 13):
-        lower_limit = .21
-        upper_limit = .70       
+        lower_limit = .3
+        upper_limit = .7
         df_minute['diff'] = None
         for i in range(1, df_minute.shape[0]) :
             df_minute['diff'].iloc[i] = df_minute['close'].iloc[i] - df_minute['close'].iloc[i-1] 
@@ -57,11 +57,7 @@ class VolatilityChecker():
             diff = df_minute['diff'].iloc[i-rsi_jump:i]
             df_minute['RSI'].iloc[i] = np.sum(np.where(diff > 0, diff, 0) ) / np.sum(np.abs(diff))
         
-        boolean = df_minute['RSI'].iloc[-2] > upper_limit 
-        boolean = boolean and  df_minute['RSI'].iloc[-2] >= df_minute['RSI'].iloc[-3] 
-        boolean = boolean and df_minute['RSI'].iloc[-1] <= df_minute['RSI'].iloc[-2] 
-        
-        return boolean
+        return (df_minute['RSI'].iloc[-1] > upper_limit) 
     
     def check_exit(self, df_minute): 
          return  df_minute['close'].iloc[-180:-3].mean() * 1.04 < df_minute['close'].iloc[-1]
