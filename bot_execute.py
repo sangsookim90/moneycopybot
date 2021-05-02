@@ -74,7 +74,7 @@ class MoneyCopyBot():
                             print(traceback.print_exc())
                             print(coin_code)
                             continue 
-                time.sleep(290)
+                time.sleep(87)
                 
                 
 
